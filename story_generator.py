@@ -31,8 +31,10 @@ def sample(preds, temperature=1.0):
 
 generated = ''
 seed = ''
+#Create the seed to start generating text from
 for i in range (maxlen-4):
     seed+=np.random.choice(chars)
+#End the seed with " and" so that the next generated word actually makes sense. 
 seed+=' and'
 #generated += seed
 print('----- Generating with seed: "' + seed + '"')
@@ -44,6 +46,7 @@ for chapter_no in range(20):
     while True:
         print('char count:',char_count)
         if next_char=='.' and np.random.choice([True,False],p=[0.3,0.7]):
+            #after each sentence, a 30% chance of changing paragraphs regardless of what the model outputs
             next_char='\n'
         else:
             x_pred = np.zeros((1, maxlen, len(chars)))
@@ -56,6 +59,7 @@ for chapter_no in range(20):
         char_count+=1
         seed = seed[1:] + next_char
         if char_count>10000 and next_char=='\n' and np.random.choice([True,False]):
+            #after 10000 characters, after each paragraph, a 50% chance of changing chapters
             generated+='\n'
             break
 
