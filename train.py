@@ -9,7 +9,7 @@ import numpy as np
 import random
 
 
-text=get_text_from_file('train.txt')
+text=get_string_from_file('train.txt')
 
 chars = sorted(list(set(text)))
 print('total chars:', len(chars))
