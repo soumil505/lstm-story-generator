@@ -3,18 +3,13 @@ from keras.models import Sequential
 from keras.layers import Dense, Activation
 from keras.layers import LSTM
 from keras.optimizers import RMSprop
-from keras.utils.data_utils import get_file
-from keras.models import model_from_json
+from preprocessing import get_text_from_file,get_sentences,vectorize,sample
 import sys
 import numpy as np
 import random
 
 
-paragraphs=open('train.txt').readlines()
-for i in range (0,len(paragraphs)):
-    paragraphs[i]=paragraphs[i].lower().replace('\xa0',' ')
-text=open('train.txt').read().lower().replace('\xa0',' ')
-print('corpus length:', len(text))
+text=get_text_from_file('train.txt')
 
 chars = sorted(list(set(text)))
 print('total chars:', len(chars))
@@ -23,29 +18,10 @@ indices_char = dict((i, c) for i, c in enumerate(chars))
 
 maxlen = 100
 step = 3
-sentences = []
-next_chars = []
-for i in range(0, len(text) - maxlen, step):
-    sentences.append(text[i: i + maxlen])
-    next_chars.append(text[i + maxlen])
-print('number of sequences:', len(sentences))
+sentences,next_chars=get_sentences(text,maxlen,step)
 
-print('Vectorization...')
-x = np.zeros((len(sentences), maxlen, len(chars)), dtype=np.bool)
-y = np.zeros((len(sentences), len(chars)), dtype=np.bool)
-for i, sentence in enumerate(sentences):
-    for t, char in enumerate(sentence):
-        x[i, t, char_indices[char]] = 1
-    y[i, char_indices[next_chars[i]]] = 1
+x,y=vectorize(sentences,next_chars,chars,maxlen)
      
-def sample(preds, temperature=1.0):
-    # helper function to sample an index from a probability array
-    preds = np.asarray(preds).astype('float64')
-    preds = np.log(preds) / temperature
-    exp_preds = np.exp(preds)
-    preds = exp_preds / np.sum(exp_preds)
-    probas = np.random.multinomial(1, preds, 1)
-    return np.argmax(probas)
 print('Build model...')
 model = Sequential()
 model.add(LSTM(128, input_shape=(maxlen, len(chars))))

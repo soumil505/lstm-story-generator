@@ -1,9 +1,9 @@
-
+from preprocessing import get_text_from_file,get_sentences,vectorize,sample
 from keras.models import model_from_json
 import numpy as np
 print('keras imported')
 
-text=open('train.txt').read().lower().replace('\xa0',' ')
+text=get_text_from_file('train.txt')
 chars = sorted(list(set(text)))
 indices_char = dict((i, c) for i, c in enumerate(chars))
 maxlen=100
@@ -16,18 +16,6 @@ model = model_from_json(json_string)
 model.load_weights('weights-final.h5')
 print('Model loaded')
 
-def sample(preds, temperature=1.0):
-    # helper function to sample an index from a probability array
-    np.seterr(all='raise')
-    try:
-        preds = np.asarray(preds).astype('float64')
-        preds = np.log(preds) / temperature
-        exp_preds = np.exp(preds)
-        preds = exp_preds / np.sum(exp_preds)
-        probas = np.random.multinomial(1, preds, 1)
-        return np.argmax(probas)
-    except:
-        return np.argmax(preds)
 
 generated = ''
 seed = ''
