@@ -3,7 +3,7 @@ from keras.models import Sequential
 from keras.layers import Dense, Activation
 from keras.layers import LSTM
 from keras.optimizers import RMSprop
-from preprocessing import get_text_from_file,get_sentences,vectorize,sample
+from preprocessing import get_string_from_file,get_sentences,vectorize,sample
 import sys
 import numpy as np
 import random
