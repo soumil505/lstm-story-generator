@@ -1,9 +1,9 @@
-from preprocessing import get_text_from_file,get_sentences,vectorize,sample
+from preprocessing import get_string_from_file,get_sentences,vectorize,sample
 from keras.models import model_from_json
 import numpy as np
 print('keras imported')
 
-text=get_text_from_file('train.txt')
+text=get_string_from_file('train.txt')
 chars = sorted(list(set(text)))
 indices_char = dict((i, c) for i, c in enumerate(chars))
 maxlen=100
